@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TeamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('hello-world', function() {
+    return response()->json([
+        'message' => 'Hello world! 👋 This is the Prode backend API',
+    ]);
+});
+
+// Auth routes
 Route::controller(AuthController::class)->group(function() {
     Route::post('/token', 'token');
     Route::post('/token/refresh', 'refresh');
@@ -27,8 +35,7 @@ Route::controller(AuthController::class)->group(function() {
     Route::post('register', 'register');
 });
 
-Route::get('hello-world', function() {
-    return response()->json([
-        'message' => 'Hello world! 👋 This is the Prode backend API',
-    ]);
-});
+// First the custom routes, then the resource routes
+// https://laravel.com/docs/9.x/controllers#restful-supplementing-resource-controllers
+Route::post('/teams/csv_upload', [TeamController::class, 'csv_upload']);
+Route::apiResource('teams', TeamController::class);
