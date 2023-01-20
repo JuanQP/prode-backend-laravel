@@ -4,14 +4,11 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TeamRequest extends FormRequest
+class CompetitionRequest extends FormRequest
 {
     public static $rules = [
         'name' => 'required|string|max:100',
-        'short_name' => 'required|string|max:4',
-        'image' => 'string',
     ];
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -30,8 +27,8 @@ class TeamRequest extends FormRequest
     public function rules()
     {
         if($this->isMethod('PATCH') || $this->isMethod('PUT')) {
-            return Helpers::sometimes(TeamRequest::$rules);
+            return Helpers::sometimes(CompetitionRequest::$rules);
         }
-        return TeamRequest::$rules;
+        return CompetitionRequest::$rules;
     }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\TeamController;
 
 /*
@@ -39,3 +40,6 @@ Route::controller(AuthController::class)->group(function() {
 // https://laravel.com/docs/9.x/controllers#restful-supplementing-resource-controllers
 Route::post('/teams/csv_upload', [TeamController::class, 'csv_upload']);
 Route::apiResource('teams', TeamController::class);
+
+Route::post('/competitions/{id}/csv_upload', [CompetitionController::class, 'csv_upload']);
+Route::apiResource('competitions', CompetitionController::class);
