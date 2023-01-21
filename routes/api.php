@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,3 +50,10 @@ Route::controller(ParticipantController::class)->group(function() {
     Route::get('/participants/ranking', 'ranking');
     Route::get('/participants/my_participations', 'my_participations');
 });
+
+Route::controller(UserController::class)->group(function() {
+    Route::get('/users/me', 'me');
+    Route::match(['PUT', 'PATCH'], '/users/me', 'update_me');
+    Route::post('/users/{id}/change_password', 'change_password');
+});
+Route::apiResource('users', UserController::class)->only(['index', 'show']);
