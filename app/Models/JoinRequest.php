@@ -10,12 +10,12 @@ class JoinRequest extends Model
     'accepted',
   ];
 
-  public function league()
+  public function League()
   {
     return $this->belongsTo(League::class, 'league');
   }
 
-  public function user()
+  public function User()
   {
     return $this->belongsTo(User::class, 'user');
   }

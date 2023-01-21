@@ -22,17 +22,17 @@ class Game extends Model
         return $this->hasMany(Prediction::class, 'match');
     }
 
-    public function competition()
+    public function Competition()
     {
         return $this->belongsTo(Competition::class, 'competition');
     }
 
-    public function team_a()
+    public function teamA()
     {
         return $this->belongsTo(Team::class, 'team_a');
     }
 
-    public function team_b()
+    public function teamB()
     {
         return $this->belongsTo(Team::class, 'team_b');
     }

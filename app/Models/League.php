@@ -13,12 +13,12 @@ class League extends Model
     'is_public',
   ];
 
-  public function owner()
+  public function Owner()
   {
     return $this->belongsTo(User::class, 'owner');
   }
 
-  public function competition()
+  public function Competition()
   {
     return $this->belongsTo(Competition::class, 'competition');
   }

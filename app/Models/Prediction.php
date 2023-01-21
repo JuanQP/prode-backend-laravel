@@ -17,12 +17,12 @@ class Prediction extends Model
         'team_b_score',
     ];
 
-    public function participant()
+    public function Participant()
     {
         return $this->belongsTo(Participant::class, 'participant');
     }
 
-    public function match()
+    public function Match()
     {
         return $this->belongsTo(Game::class, 'match');
     }
@@ -49,16 +49,16 @@ class Prediction extends Model
         }
 
         // Update participant
-        $participant = $this->participant;
+        $participant = $this->Participant;
         $participant->score += $total_points;
         $participant->save();
     }
 
     public function toString()
     {
-        $team_a = $this->match->team_a->short_name;
+        $team_a = $this->Match->teamA->short_name;
         $score_a = $this->team_a_score;
-        $team_b = $this->match->team_b->short_name;
+        $team_b = $this->Match->teamB->short_name;
         $score_b = $this->team_b_score;
 
         if($score_a == '' || $score_b == '') {

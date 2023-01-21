@@ -12,12 +12,12 @@ class Participant extends Model
     'score',
   ];
 
-  public function user()
+  public function User()
   {
     return $this->belongsTo(User::class, 'user');
   }
 
-  public function league()
+  public function League()
   {
     return $this->belongsTo(League::class, 'league');
   }
