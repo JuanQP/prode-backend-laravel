@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompetitionController;
+use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\TeamController;
 
 /*
@@ -43,3 +44,8 @@ Route::apiResource('teams', TeamController::class);
 
 Route::post('/competitions/{id}/csv_upload', [CompetitionController::class, 'csv_upload']);
 Route::apiResource('competitions', CompetitionController::class);
+
+Route::controller(ParticipantController::class)->group(function() {
+    Route::get('/participants/ranking', 'ranking');
+    Route::get('/participants/my_participations', 'my_participations');
+});
