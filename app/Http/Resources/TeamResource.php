@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CompetitionDetailResource extends JsonResource
+class TeamResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,8 @@ class CompetitionDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'leagues' => $this->leagues, // TODO
-            'matches' => MatchResource::collection($this->matches),
+            'short_name' => $this->short_name,
+            'image' => $this->image,
         ];
     }
 }

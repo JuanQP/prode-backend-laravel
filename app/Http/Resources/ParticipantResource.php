@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ParticipantResource extends JsonResource
@@ -17,8 +18,8 @@ class ParticipantResource extends JsonResource
         return [
             'id' => $this->id,
             'score' => $this->score,
-            'league' => $this->league, // TODO
-            'user' => $this->user, // TODO
+            'league' => $this->League, // TODO
+            'user' => new UserResource($this->User),
         ];
     }
 }
