@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\MatchController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\PredictionController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 
@@ -57,10 +58,12 @@ Route::controller(UserController::class)->group(function() {
     Route::match(['PUT', 'PATCH'], '/users/me', 'update_me');
     Route::post('/users/{id}/change_password', 'change_password');
 });
-Route::apiResource('users', UserController::class)->only(['index', 'show']);
+Route::apiResource('users', UserController::class)->only(['show']);
 
 Route::controller(MatchController::class)->group(function() {
     Route::get('/matches/next_matches', 'next_matches');
     Route::post('/matches/{id}/finish', 'finish');
 });
 Route::apiResource('matches', MatchController::class);
+
+Route::apiResource('predictions', PredictionController::class)->only(['show', 'update']);

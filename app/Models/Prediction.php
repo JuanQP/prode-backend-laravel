@@ -27,6 +27,11 @@ class Prediction extends Model
         return $this->belongsTo(Game::class, 'match');
     }
 
+    public function is_owner(User $user)
+    {
+        return $this->Participant->User->id == $user->id;
+    }
+
     public function update_score(Game $finished_match)
     {
         $total_points = 0;
