@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class JoinRequest extends Model
 {
   protected $fillable = [
+    'league',
+    'user',
     'accepted',
   ];
 

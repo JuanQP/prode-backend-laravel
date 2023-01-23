@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompetitionController;
+use App\Http\Controllers\JoinRequestController;
 use App\Http\Controllers\MatchController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\PredictionController;
@@ -65,5 +66,5 @@ Route::controller(MatchController::class)->group(function() {
     Route::post('/matches/{id}/finish', 'finish');
 });
 Route::apiResource('matches', MatchController::class);
-
 Route::apiResource('predictions', PredictionController::class)->only(['show', 'update']);
+Route::apiResource('join-requests', JoinRequestController::class)->only(['store', 'update']);
