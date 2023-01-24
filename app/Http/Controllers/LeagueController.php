@@ -7,11 +7,13 @@ use App\Http\Requests\LeagueUpdateRequest;
 use App\Http\Requests\PredictionCreateRequest;
 use App\Http\Resources\LeagueDetailResource;
 use App\Http\Resources\LeagueResource;
+use App\Http\Resources\MatchResource;
+use App\Http\Resources\MyLeagueResource;
 use App\Http\Resources\PredictionResource;
 use App\Models\League;
 use App\Models\Participant;
 use App\Models\Prediction;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class LeagueController extends Controller
 {
@@ -20,7 +22,9 @@ class LeagueController extends Controller
         $this->middleware('auth:api', ['except' => [
             'index',
             'show',
-
+            'can_join',
+            'next_matches',
+            'matches',
         ]]);
     }
 
@@ -148,5 +152,144 @@ class LeagueController extends Controller
         $prediction->save();
 
         return new PredictionResource($prediction);
+    }
+
+    /**
+     * Returns if the current user (guest or not) can join this League.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function can_join($id)
+    {
+        $user = auth()->user();
+        if(is_null($user)) {
+            return response()->json([
+                'can_join' => false,
+                'is_participant' => false,
+                'message' => 'Tenés que estar logueado.',
+            ]);
+        }
+
+        $league = League::findOrFail($id);
+        $is_participant = $league
+            ->participants()
+            ->where('user', $user->id)
+            ->exists();
+        $has_pending_join_request = $league
+            ->join_requests()
+            ->where('user', $user->id)
+            ->whereNull('accepted')
+            ->exists();
+        $message = 'Podés unirte';
+
+        if ($has_pending_join_request) {
+            $message = 'Tenés una solicitud para unirte pendiente.';
+        }
+        else if ($is_participant) {
+            $message = 'Ya estás participando de esta liga.';
+        }
+
+        return response()->json([
+            'can_join' => !$has_pending_join_request && !$is_participant,
+            'is_participant' => $is_participant,
+            'message' => $message,
+        ]);
+    }
+
+    /**
+     * Returns the next matches of a League
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function next_matches($id)
+    {
+        $league = League::findOrFail($id);
+        $today = Carbon::now()->format('Y-m-d');
+        $matches = $league->Competition->matches()->where('datetime', '>=', $today)->get();
+        $matches->load('teamA', 'teamB');
+
+        return MatchResource::collection($matches);
+    }
+
+    /**
+     * Returns all the matches of a League
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function matches($id)
+    {
+        $league = League::findOrFail($id);
+        $matches = $league->Competition->matches()->get();
+        $matches->load('teamA', 'teamB');
+
+        return MatchResource::collection($matches);
+    }
+
+    /**
+     * Returns the predictions of a user in a League
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function my_predictions($id)
+    {
+        $user = auth()->user();
+        $league = League::findOrFail($id);
+        $participant = $league
+            ->participants()
+            ->where('user', $user->id)
+            ->where('league', $league->id)
+            ->first();
+        if (is_null($participant) && $league->is_public) {
+            $empty_array = (object) [];
+            return response()->json($empty_array);
+        }
+        else if (is_null($participant) && !$league->is_public) {
+            return response()->json([
+                'message' => 'No sos parte de esta liga.',
+            ], 403);
+        }
+
+        // This user is a Participant of this League
+        $predictions = $participant->predictions()->get();
+        return PredictionResource::collection($predictions);
+    }
+
+    /**
+     * Returns user created leagues with their join requests
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function my_leagues()
+    {
+        $user = auth()->user();
+        $leagues = League::where('owner', $user->id)
+            ->with('Competition', 'Owner', 'join_requests', 'participants')
+            ->get();
+
+        return MyLeagueResource::collection($leagues);
+    }
+
+    /**
+     * Returns a user created league with their join requests
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function my_league($id)
+    {
+        $user = auth()->user();
+        $league = League::findOrFail($id)
+            ->with('Competition', 'Owner', 'join_requests', 'participants')
+            ->get();
+
+        if (!$user->is_staff && $league->Owner->id != $user->id) {
+            return response()->json(['message' => 'This League is not yours.'], 403);
+        }
+
+        return new MyLeagueResource($league);
     }
 }

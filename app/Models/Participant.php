@@ -21,4 +21,9 @@ class Participant extends Model
   {
     return $this->belongsTo(League::class, 'league');
   }
+
+  public function predictions()
+  {
+    return $this->hasMany(Prediction::class, 'participant');
+  }
 }

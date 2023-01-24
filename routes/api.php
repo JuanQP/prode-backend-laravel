@@ -72,5 +72,11 @@ Route::apiResource('join-requests', JoinRequestController::class)->only(['store'
 
 Route::controller(LeagueController::class)->group(function() {
     Route::post('/leagues/{id}/add_prediction', 'add_prediction');
+    Route::get('/leagues/{id}/can_join', 'can_join');
+    Route::get('/leagues/{id}/next_matches', 'next_matches');
+    Route::get('/leagues/{id}/matches', 'matches');
+    Route::get('/leagues/{id}/my_predictions', 'my_predictions');
+    Route::get('/leagues/{id}/my_league', 'my_league');
+    Route::get('/leagues/my_leagues', 'my_leagues');
 });
 Route::apiResource('leagues', LeagueController::class);
