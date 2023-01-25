@@ -78,5 +78,6 @@ Route::controller(LeagueController::class)->group(function() {
     Route::get('/leagues/{id}/my_predictions', 'my_predictions');
     Route::get('/leagues/{id}/my_league', 'my_league');
     Route::get('/leagues/my_leagues', 'my_leagues');
+    Route::get('/leagues-search/', 'search');
 });
 Route::apiResource('leagues', LeagueController::class);

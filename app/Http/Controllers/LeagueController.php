@@ -6,6 +6,7 @@ use App\Http\Requests\LeagueCreateRequest;
 use App\Http\Requests\LeagueUpdateRequest;
 use App\Http\Requests\PredictionCreateRequest;
 use App\Http\Resources\LeagueDetailResource;
+use App\Http\Resources\LeaguePaginatedSearchResultResource;
 use App\Http\Resources\LeagueResource;
 use App\Http\Resources\MatchResource;
 use App\Http\Resources\MyLeagueResource;
@@ -14,6 +15,7 @@ use App\Models\League;
 use App\Models\Participant;
 use App\Models\Prediction;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class LeagueController extends Controller
 {
@@ -25,6 +27,7 @@ class LeagueController extends Controller
             'can_join',
             'next_matches',
             'matches',
+            'search',
         ]]);
     }
 
@@ -291,5 +294,24 @@ class LeagueController extends Controller
         }
 
         return new MyLeagueResource($league);
+    }
+
+    /**
+     * Searches Leagues by name or competition name
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $search = $request->query('search') ?? '';
+        $page = $request->query('page');
+
+        $leagues = League::where('name', 'ilike', "%{$search}%")
+            ->orWhereRelation('competition', 'name', 'ilike', "%{$search}%")
+            ->orderByDesc('id')
+            ->paginate(10, ['*'], 'page', $page);
+
+        // Search and page query params
+        return new LeaguePaginatedSearchResultResource($leagues);
     }
 }
