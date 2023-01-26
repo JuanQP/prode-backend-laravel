@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserDetailResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -26,7 +27,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'refresh' => '',
+            'refresh' => 'laravel',
             'access' => $token,
         ]);
     }
@@ -61,10 +62,15 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me()
+    public function logged()
     {
         return response()->json([
             'message' => 'You are seeing this response because you are logged in.',
         ]);
+    }
+
+    public function me()
+    {
+        return new UserDetailResource(auth()->user());
     }
 }

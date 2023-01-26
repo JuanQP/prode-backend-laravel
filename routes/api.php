@@ -56,6 +56,7 @@ Route::controller(ParticipantController::class)->group(function() {
 });
 
 Route::controller(UserController::class)->group(function() {
+    Route::get('/users/logged', 'logged');
     Route::get('/users/me', 'me');
     Route::match(['PUT', 'PATCH'], '/users/me', 'update_me');
     Route::post('/users/{id}/change_password', 'change_password');
