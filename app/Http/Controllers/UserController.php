@@ -59,7 +59,15 @@ class UserController extends Controller
          * @var \App\Models\User
          */
         $user = auth()->user();
-        $user->fill($request->validated());
+        $user->fill($request->safe()->except(['avatar']));
+
+        if($request->hasFile('avatar')) {
+            $file = $request->avatar;
+            $imageName = time().'.'.$file->extension();
+            $file->move(storage_path('app/public/'), $imageName);
+            $user->avatar = '/media/' . $imageName;
+        }
+
         $user->save();
 
         return new UserDetailResource($user);
