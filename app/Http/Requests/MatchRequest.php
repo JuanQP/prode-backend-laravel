@@ -10,7 +10,7 @@ class MatchRequest extends FormRequest
         'competition' => 'required|numeric',
         'team_a' => 'required|numeric',
         'team_b' => 'required|numeric|different:team_a',
-        'datetime' => 'required|date_format:Y-m-d\\TH:i:s\\Z',
+        'datetime' => 'required|date_format:Y-m-d\\TH:i',
         'stadium' => 'required|string|max:50',
         'description' => 'required|string|max:100',
     ];

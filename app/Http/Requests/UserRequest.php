@@ -26,7 +26,7 @@ class UserRequest extends FormRequest
         return [
             'first_name' => 'sometimes|string|max:100',
             'last_name' => 'sometimes|string|max:100',
-            'avatar' => 'sometimes|string|max:255',
+            'avatar' => 'sometimes|image',
         ];
     }
 }

@@ -68,7 +68,7 @@ class JoinRequestController extends Controller
                 'message' => 'You are not the owner of the League.',
             ], 403);
         }
-        if(!$joinRequest == null) {
+        if(!is_null($joinRequest->accepted)) {
             return response()->json([
                 'message' => 'This join request has already been answered.',
             ], 403);
@@ -85,7 +85,7 @@ class JoinRequestController extends Controller
                     'user' => $joinRequest->User->id,
                 ]);
                 // Add new Participant to League
-                $joinRequest->League->participants->save($participant);
+                $joinRequest->League->participants()->save($participant);
             }
         });
 

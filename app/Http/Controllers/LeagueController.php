@@ -285,9 +285,8 @@ class LeagueController extends Controller
     public function my_league($id)
     {
         $user = auth()->user();
-        $league = League::findOrFail($id)
-            ->with('Competition', 'Owner', 'join_requests', 'participants')
-            ->get();
+        $league = League::with('Competition', 'Owner', 'join_requests', 'participants')
+            ->findOrFail($id);
 
         if (!$user->is_staff && $league->Owner->id != $user->id) {
             return response()->json(['message' => 'This League is not yours.'], 403);
