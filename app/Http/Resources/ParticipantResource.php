@@ -18,7 +18,7 @@ class ParticipantResource extends JsonResource
         return [
             'id' => $this->id,
             'score' => $this->score,
-            'league' => $this->League, // TODO
+            'league' => new LeagueResource($this->League),
             'user' => new UserResource($this->User),
         ];
     }

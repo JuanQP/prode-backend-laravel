@@ -16,8 +16,8 @@ class JoinRequestResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->user,
-            'league' => $this->league,
+            'user' => new UserResource($this->User),
+            'league' => new LeagueResource($this->League),
             'accepted' => $this->accepted,
         ];
     }

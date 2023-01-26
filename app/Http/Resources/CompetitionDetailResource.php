@@ -17,7 +17,7 @@ class CompetitionDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'leagues' => $this->leagues, // TODO
+            'leagues' => LeagueResource::collection($this->leagues),
             'matches' => MatchResource::collection($this->matches),
         ];
     }
